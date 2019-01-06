@@ -34,7 +34,6 @@ app.post('/register', function (req, res) {
   db.users.insert(user, function (err) {
     if (err) { throw err; }
     res.status(403).json({ msg: 'You are registered now!' });
-    db.close();
   });
 });
 
@@ -44,7 +43,6 @@ app.post('/book', function (req, res) {
     db.reservations.insert(hotel, function (err) {
       if (err) { throw err; }
       res.status(403).json({ msg: 'Your reservation is successful!' });
-      db.close();
     });
   });
 });
@@ -85,7 +83,6 @@ app.get('/insert', function () {
   db.tickets.insert(myobj, function (err, res) {
     if (err) throw err;
     console.log("Number of documents inserted: " + res.insertedCount);
-    db.close();
   });
 });
 
