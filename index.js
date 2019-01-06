@@ -5,9 +5,9 @@ var app = express();
 var bodyParser = require('body-parser')
 const TOP_SECRET = 'hamdijagasejva';
 
-var db = mongojs('localhost:27017/MRSystem')
+var db = mongojs('mongodb://localhost:27017/MRSystem')
 
-var port = process.env.PORT || 3000;
+var port = process.env.PROD_MONGODB || 3000;
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
