@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Lift Tickets</title>
+
+</head>
+
+<body class="lift" ng-app="myApp">
+
+    <!-- Services -->
+    <section id="services" ng-controller="HotelDemoCtrl">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading text-uppercase">Lift Tickets</h2>
+                    <h3 class="section-subheading text-muted">Best pricing for our lift tickets.</h3>
+                </div>
+            </div>
+            <select id="selectTicket" ng-model="page_size_ticket" ng-change="get_tickets(0, page_size_ticket)">
+                <option value="4">4</option>
+                <option value="8">8</option>
+                <option value="12">12</option>
+                <option value="16">16</option>
+            </select><br><br>
+            <div class="row">
+                <div id="pricing-table" class="clear">
+                    <div class="plan" ng-repeat="ticket in tickets">
+                        <h3>{{ticket.type}}<span>${{ticket.price}}</span></h3>
+                        <h6><span>{{ticket.title}}</span></h6>
+                        <button style="float:none;" class="signup" data-toggle="modal" ng-click="openTicketModal(ticket)">Book</button>
+                        <ul>
+                            <li ng-repeat="i in ticket.description"><b>{{i}}</b></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <button ng-click="next()" ng-disabled="no_more" type="button" class="btn btn-success" style="float: right;background-color: #fed136;border: none">Next</button>
+            <button ng-click="previous()" ng-disabled="page == 1" type="button" class="btn btn-success" style="float: right; margin-right: 2px;background-color: #fed136;border: none">Previous</button>
+        </div>
+
+        <script type="text/ng-template" id="ModalContent.html">
+            <div ng-controller="bookTicketCtrl">
+                <form class="modal-content animate">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-title">{{ticket.title}}</h5>
+                        <span ng-click="cancel()" class="close">&times;</span>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <b>{{ticket.title}}</b>
+                                </div>
+                                <div class="col-sm">
+                                    ${{price}}
+                                </div>
+                                <div class="col-sm">
+                                    <select ng-model="selectedItem" ng-options="x for x in qty" ng-change="selectedItemChanged()" class="sel form-control">
+                                </select>                                    
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" ng-click="bookHotel(); cancel()">Book</button>
+                    </div>
+                </form>
+            </div>
+        </script>
+    </section>
+</body>
+
+</html>

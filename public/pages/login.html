@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>MRSystem</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/login.css" rel="stylesheet">
+    <link href="../css/agency.min.css" rel="stylesheet">
+    <link href="../css/lift.css" rel="stylesheet">
+</head>
+
+<body id="page-top" ng-controller="loginCtrl" ng-show="show">
+    <!-- Navigation -->
+    <div ng-controller="navController">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" id="mainNav" role="navigation">
+            <div class="btn-group float-right mt-2" role="group">
+                <button id="logo" type="button" class="btn btn-secondary btn-md" onclick="window.localStorage.clear(); window.location='../index.html'">Logout</button>
+                <button type="button" class="btn btn-secondary btn-md" ng-click="openProfile()">Profile</button>
+            </div>
+                <div class="modal-demo">
+                    <script type="text/ng-template" id="myProfileModalContent.html">
+                        <form class="modal-content animate">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="modal-title">Profile</h5>
+                              <span ng-click="cancel()" class="close">&times;</span>
+                            </div>
+                        
+                            <div class="modal-body" id="modal-body">
+                            </div>
+                        </form>
+                    </script>
+                </div>
+            <button type="button" class="navbar-toggler" ng-init="isCollapsed = false" ng-click="open()">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse" ng-class="{collapse: !isCollapsed}">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" ng-click="open()" href="#!home"><i class="fa fa-fw fa-home"></i>
+                            Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" ng-click="open()" href="#!loginHotel"><i class="fas fa-bed"></i>
+                            Hotels</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" ng-click="open()" href="#!loginTicket"><i class="fas fa-ticket-alt"></i>
+                            Lift Tickets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" ng-click="open()" href="#!about"><i class="fas fa-book-reader"></i>
+                            About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" ng-click="open()" href="#!contact"><i class="fa fa-fw fa-envelope"></i>
+                            Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <div ng-view></div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-touch.js"></script>
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+<script src="../js/myApp.js"></script>
+<script src="../js/hotelModals.js"></script>
+
+</html>
