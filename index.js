@@ -5,9 +5,9 @@ var app = express();
 var bodyParser = require('body-parser')
 const TOP_SECRET = 'hamdijagasejva';
 
-var db = mongojs('mongodb://localhost:27017/MRSystem')
+var db = mongojs('localhost:27017/MRSystem')
 
-var port = process.env.PROD_MONGODB || 3000;
+var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
@@ -34,6 +34,7 @@ app.post('/register', function (req, res) {
   db.users.insert(user, function (err) {
     if (err) { throw err; }
     res.status(403).json({ msg: 'You are registered now!' });
+    db.close();
   });
 });
 
@@ -43,6 +44,7 @@ app.post('/book', function (req, res) {
     db.reservations.insert(hotel, function (err) {
       if (err) { throw err; }
       res.status(403).json({ msg: 'Your reservation is successful!' });
+      db.close();
     });
   });
 });
@@ -83,6 +85,7 @@ app.get('/insert', function () {
   db.tickets.insert(myobj, function (err, res) {
     if (err) throw err;
     console.log("Number of documents inserted: " + res.insertedCount);
+    db.close();
   });
 });
 
