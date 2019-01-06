@@ -4,10 +4,10 @@ var mongojs = require('mongojs');
 var app = express();
 var bodyParser = require('body-parser')
 const TOP_SECRET = 'hamdijagasejva';
-const PROD_MONGODB = 'mongodb://Minoo:Realmadrid9@ds149894.mlab.com:49894/mrsystem'
-var db = mongojs('mongodb://localhost:27017/MRSystem')
 
-var port = process.env.PROD_MONGODB || 3000;
+var db = mongojs(process.env.PROD_MONGODB || 'localhost:27017/MRSystem')
+
+var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
