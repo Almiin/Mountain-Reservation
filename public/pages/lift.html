@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Lift Tickets</title>
+    <title>Ski Lift Tickets</title>
 
 </head>
 
@@ -19,22 +19,40 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="section-heading text-uppercase">Lift Tickets</h2>
-                    <h3 class="section-subheading text-muted">Best pricing for our lift tickets.</h3>
+                    <h2 class="section-heading text-uppercase">Ski Lift Tickets</h2>
+                    <h3 class="section-subheading text-muted">Best pricing for our ski lift tickets.</h3>
                 </div>
             </div>
             <select id="selectTicket" ng-model="page_size_ticket" ng-change="get_tickets(0, page_size_ticket)">
                 <option value="4">4</option>
                 <option value="8">8</option>
-                <option value="12">12</option>
                 <option value="16">16</option>
-            </select><br><br>
+                <option value="32">32</option>
+                <option value="64">64</option>
+            </select>
+            <select style="float:right;width: 15%;" ng-model="searchBox.type">
+                <option value="">Type:</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Family">Family</option>
+                <option value="Daily">Daily</option>
+            </select>
+            <select style="float:right;width: 15%; margin-right: 20px;" ng-model="searchBox.destination" ng-change="get_tickets(($scope.page - 1) * $scope.page_size_ticket, $scope.page_size_ticket)">
+                <option value="">Select mountain:</option>
+                <option value="Bjelašnica">Bjelašnica</option>
+                <option value="Jahorina">Jahorina</option>
+                <option value="Vlašić">Vlašić</option>
+            </select>
+            <br><br>
             <div class="row">
                 <div id="pricing-table" class="clear">
-                    <div class="plan" ng-repeat="ticket in tickets">
+                    <div class="plan" ng-repeat="ticket in tickets | filter: searchBox">
                         <h3>{{ticket.type}}<span>${{ticket.price}}</span></h3>
                         <h6><span>{{ticket.title}}</span></h6>
-                        <button style="float:none;" class="help signup" disabled>Book<span>Please log in!</span></button>
+                        <button style="float:none;" data-toggle="modal" ng-disabled="disabled" ng-class="hideBook"
+                            ng-click="openTicketModal(ticket)">Book<span ng-show="hoverEdit" class="animate-show">
+                                Please login!
+                            </span></button>
                         <ul>
                             <li ng-repeat="i in ticket.description"><b>{{i}}</b></li>
                         </ul>
@@ -44,6 +62,36 @@
             <button ng-click="next()" ng-disabled="no_more" type="button" class="btn btn-success" style="float: right;background-color: #fed136;border: none">Next</button>
             <button ng-click="previous()" ng-disabled="page == 1" type="button" class="btn btn-success" style="float: right; margin-right: 2px;background-color: #fed136;border: none">Previous</button>
         </div>
+
+        <script type="text/ng-template" id="ModalContent.html">
+            <div ng-controller="bookTicketCtrl">
+                <form class="modal-content animate">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-title" ng-bind="book.ticketTitle + ' - ' + book.ticketDestination"></h5>
+                        <span ng-click="cancel()" class="close">&times;</span>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <b><p ng-bind="book.ticketTitle"></p></b>
+                                </div>
+                                <div class="col-sm" >
+                                    <label ng-bind="book.ticketPrice"></label>
+                                </div>
+                                <div class="col-sm">
+                                    <select ng-model="book.ticket" ng-options="x for x in qty" ng-change="selectedItemChanged()" class="sel form-control">
+                                </select>                                    
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" ng-click="bookTicket()">Book</button>
+                    </div>
+                </form>
+            </div>
+        </script>
     </section>
 </body>
 

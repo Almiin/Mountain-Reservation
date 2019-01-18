@@ -1,4 +1,12 @@
-var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngTouch']);
+var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngTouch', 'ngAnimate']);
+
+var config = {
+  headers: {
+    'Authorization': 'Basic d2VudHdvcnRobWFuOkNoYW5nZV9tZQ==',
+    'Accept': 'application/json;odata=verbose',
+    "JWT": localStorage.getItem('user')
+  }
+};
 
 app.config(function ($routeProvider) {
   $routeProvider.
@@ -16,12 +24,6 @@ app.config(function ($routeProvider) {
     }).
     when("/contact", {
       templateUrl: "../pages/contact.html"
-    }).
-    when("/loginTicket", {
-      templateUrl: "../pages/loginTicket.html"
-    }).
-    when("/loginHotel", {
-      templateUrl: "../pages/loginHotel.html"
     }).
     otherwise({ redirectTo: "/home" });
 });
@@ -106,15 +108,27 @@ app.controller('myCtrl', function ($scope, $http) {
     gender: 'Male'
   }
 
-  $scope.loginUser = function () {
-    var loginData = $scope.login;
+  $scope.check_login = function () {
+    if (localStorage.getItem('user')) {
+      $scope.disabled = false;
+      $scope.hideBook = "signup";
+      $scope.hoverEdit = false;
+      return true;
+    } else {
+      $scope.disabled = true;
+      $scope.hideBook = "help signup";
+      $scope.hoverEdit = true;
+      return false;
+    }
+  }
 
-    $http.post('/login', loginData).then(
+  $scope.loginUser = function (credentials) {
+
+    $http.post('/login', credentials).then(
       function (response) {
-        window.localStorage.setItem('usertoken', response.data);
-        window.location = "../pages/login.html";
+        localStorage.setItem('user', response.data.token);
       }, function (error) {
-        alert(error.data.msg);
+        alert(error);
       });
   };
 
@@ -131,52 +145,93 @@ app.controller('myCtrl', function ($scope, $http) {
 });
 
 app.controller('bookTicketCtrl', function ($scope, $http) {
-  $scope.qty = ["1 ticket", "2 tickets", "3 tickets", "4 tickets", "5 tickets"];
 
-  $scope.selectedItem = "1 ticket";
-  $scope.price = $scope.ticket.price;
+  $scope.qty = ["1 ticket", "2 tickets", "3 tickets", "4 tickets", "5 tickets"];
+  $scope.book = {
+    ticketTitle: $scope.ticket.title,
+    ticketDestination: $scope.ticket.destination
+  };
+
+  $scope.book.ticket = "1 ticket";
+  $scope.book.ticketPrice = '$' + $scope.ticket.price;
 
   $scope.selectedItemChanged = function () {
-    $scope.price = $scope.ticket.price;
-    if ($scope.selectedItem == "1 ticket") {
-      return $scope.ticket.price;
-    } else if ($scope.selectedItem == "2 tickets") {
-      return $scope.price *= 2;
-    } else if ($scope.selectedItem == "3 tickets") {
-      return $scope.price *= 3;
-    } else if ($scope.selectedItem == "4 tickets") {
-      return $scope.price *= 4;
+    $scope.book.ticketPrice = $scope.ticket.price;
+    if ($scope.book.ticket == "1 ticket") {
+      return $scope.book.ticketPrice = '$' + $scope.ticket.price;
+    } else if ($scope.book.ticket == "2 tickets") {
+      return $scope.book.ticketPrice = '$' + ($scope.book.ticketPrice * 2);
+    } else if ($scope.book.ticket == "3 tickets") {
+      return $scope.book.ticketPrice = '$' + ($scope.book.ticketPrice * 3);
+    } else if ($scope.book.ticket == "4 tickets") {
+      return $scope.book.ticketPrice = '$' + ($scope.book.ticketPrice * 4);
     } else {
-      return $scope.price *= 5;
+      return $scope.book.ticketPrice = '$' + ($scope.book.ticketPrice * 5);
+    }
+  }
+
+  $scope.bookTicket = function () {
+    var r = confirm("Are you sure?");
+    if (r == true) {
+      var bookData = $scope.book;
+      console.log(bookData);
+
+      $http.post('/bookTicket', bookData, config).then(
+        function (response) {
+          console.log(response);
+        }, function (error) {
+          alert(error.data.msg);
+        });
+
+        $scope.cancel();
+    } else {
+      txt = "You pressed Cancel!";
     }
   }
 });
 
 app.controller('bookCtrl', function ($scope, $http, $uibModal) {
+
+  $scope.check_login = function () {
+    if (localStorage.getItem('user')) {
+      $scope.disabledHotel = false;
+      $scope.hideBookHotel = "signup btn btn-primary";
+      $scope.hoverEditHotel = false;
+      return true;
+    } else {
+      $scope.disabledHotel = true;
+      $scope.hideBookHotel = "help signup btn btn-primary";
+      $scope.hoverEditHotel = true;
+      return false;
+    }
+  }
+
   $scope.adults = ["2 adults", "3 adults", "4 adults", "5 adults"];
   $scope.children = ["No children", "1 child", "2 children", "3 children", "4 children", "5 children"];
   $scope.rooms = ["1 room", "2 rooms", "3 rooms", "4 rooms", "5 rooms"];
   $scope.book = {
     adults: "2 adults",
     children: "No children",
-    rooms: "1 room"
+    room: "1 room",
+    destination: $scope.hotel.destination,
+    hotelName: $scope.hotel.name
   };
 
-  $scope.selectedItem = "1 room";
-  $scope.price = $scope.hotel.price;
+  $scope.book.room = "1 room";
+  $scope.book.price = '$' + $scope.hotel.price;
 
   $scope.selectedItemChanged = function () {
-    $scope.price = $scope.hotel.price;
-    if ($scope.selectedItem == "1 room") {
-      return $scope.hotel.price;
-    } else if ($scope.selectedItem == "2 rooms") {
-      return $scope.price *= 2;
-    } else if ($scope.selectedItem == "3 rooms") {
-      return $scope.price *= 3;
-    } else if ($scope.selectedItem == "4 rooms") {
-      return $scope.price *= 4;
+    $scope.book.price = $scope.hotel.price;
+    if ($scope.book.room == "1 room") {
+      return $scope.book.price = '$' + $scope.hotel.price;
+    } else if ($scope.book.room == "2 rooms") {
+      return $scope.book.price = '$' + ($scope.book.price * 2);
+    } else if ($scope.book.room == "3 rooms") {
+      return $scope.book.price = '$' + ($scope.book.price * 3);
+    } else if ($scope.book.room == "4 rooms") {
+      return $scope.book.price = '$' + ($scope.book.price * 4);
     } else {
-      return $scope.price *= 5;
+      return $scope.book.price = '$' + ($scope.book.price * 5);
     }
   }
 
@@ -200,17 +255,23 @@ app.controller('bookCtrl', function ($scope, $http, $uibModal) {
   };
 
   $scope.bookHotel = function () {
+    var r = confirm("Are you sure?");
+    if (r == true) {
+      var bookData = $scope.book;
+      console.log(bookData);
 
-    var bookData = $scope.book;
-    console.log(bookData);
+      $http.post('/book', bookData, config).then(
+        function (response) {
+          console.log(response);
+        }, function (error) {
+          alert(error.data.msg);
+        });
 
-    $http.post('/book', bookData).then(
-      function (response) {
-        console.log(response);
-      }, function (error) {
-        alert(error.data.msg);
-      });
-  };
+      $scope.cancel();
+    } else {
+      txt = "You pressed Cancel!";
+    }
+  }
 
   $scope.photos = [
     { src: 'http://farm9.staticflickr.com/8042/7918423710_e6dd168d7c_b.jpg', desc: 'Image 01' },
@@ -241,12 +302,6 @@ app.controller('bookCtrl', function ($scope, $http, $uibModal) {
 });
 
 app.controller('loginCtrl', function ($uibModal, $scope, $log) {
-  if (window.localStorage.getItem('usertoken')) {
-    $scope.show = true;
-  } else {
-    $scope.show = false;
-    window.location = "../index.html";
-  }
 
   $scope.openProfile = function (size, parentSelector) {
     var parentElem = parentSelector ?

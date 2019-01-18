@@ -4,7 +4,7 @@ app.controller('HotelDemoCtrl', function ($uibModal, $scope, $http) {
     $scope.page_size_ticket = "4".toString();
     $scope.page = 1;
     $scope.no_more = false;
-    
+
     $scope.get_hotels = function (start, limit) {
         if (start == 0) {
             $scope.page = 1;
@@ -85,5 +85,5 @@ app.controller('HotelDemoCtrl', function ($uibModal, $scope, $http) {
         }, function () {
 
         });
-    };    
+    };
 });
