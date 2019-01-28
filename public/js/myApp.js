@@ -1,10 +1,10 @@
-var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngTouch', 'ngAnimate']);
+var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngTouch']);
 
 var config = {
   headers: {
     'Authorization': 'Basic d2VudHdvcnRobWFuOkNoYW5nZV9tZQ==',
     'Accept': 'application/json;odata=verbose',
-    "JWT": localStorage.getItem('user')
+    "jwt": localStorage.getItem('user')
   }
 };
 
@@ -28,59 +28,143 @@ app.config(function ($routeProvider) {
     otherwise({ redirectTo: "/home" });
 });
 
-app.controller('navController', function ($scope) {
+app.controller('navController', function ($scope, $uibModal) {
+  $scope.openSignupModal = function () {
+    var modalInstance = $uibModal.open({
+      animation: $scope.animationsEnabled,
+      templateUrl: 'mySignupModalContent.html',
+      controller: 'ModalInstanceCtrl',
+      resolve: {
+
+      }
+    });
+
+    modalInstance.result.then(function (response) {
+      $scope.result = `${response} button hitted`;
+    }, function () {
+
+    });
+  };
+
+  $scope.openLoginModal = function () {
+    var modalInstance = $uibModal.open({
+      animation: $scope.animationsEnabled,
+      templateUrl: 'myLoginModalContent.html',
+      controller: 'ModalInstanceCtrl',
+      resolve: {
+
+      }
+    });
+
+    modalInstance.result.then(function (response) {
+      $scope.result = `${response} button hitted`;
+    }, function () {
+
+    });
+  };
+
   $scope.open = function () {
     $scope.isCollapsed = !$scope.isCollapsed;
   }
+
+  $scope.openProfile = function () {
+    var modalInstance = $uibModal.open({
+      animation: $scope.animationsEnabled,
+      templateUrl: 'myProfileModalContent.html',
+      controller: 'ModalInstanceCtrl',
+      resolve: {
+
+      }
+    });
+
+    modalInstance.result.then(function () {
+
+    }, function () {
+
+    });
+  };
+
+  $scope.openReservations = function () {
+    var modalInstance = $uibModal.open({
+      animation: $scope.animationsEnabled,
+      templateUrl: 'myReservationsModalContent.html',
+      controller: 'ModalInstanceCtrl',
+      resolve: {
+
+      }
+    });
+
+    modalInstance.result.then(function () {
+      config;
+    }, function () {
+
+    });
+  };
 });
 
-app.controller('ModalDemoCtrl', ['$uibModal', '$scope', '$log', function ($uibModal, $scope, $log) {
-  $scope.openLoginModal = function (size, parentSelector) {
-    var parentElem = parentSelector ?
-      angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
-    var modalInstance = $uibModal.open({
-      animation: $scope.animationsEnabled,
-      ariaLabelledBy: 'modal-title',
-      ariaDescribedBy: 'modal-body',
-      templateUrl: 'myLoginModalContent.html',
-      controller: 'ModalInstanceCtrl',
-      size: size,
-      appendTo: parentElem,
-      resolve: {
+app.controller('profileCtrl', function ($scope, $http) {
+  var refresh = function () {
+    $http.get('/hotelreservations', config)
+      .then(
+        function (response) {
+          $scope.hotelreservations = response.data;
+        });
 
-      }
-    });
+    $http.get('/ticketreservations', config)
+      .then(
+        function (response) {
+          $scope.ticketreservations = response.data;
+        });
+  };
+  refresh();
 
-    modalInstance.result.then(function (response) {
-      $scope.result = `${response} button hitted`;
-    }, function () {
-      $log.info('Modal dismissed at: ' + new Date());
-    });
+  $scope.delete = function (id) {
+    var r = confirm("Are you sure?");
+    if (r == true) {
+
+      $http.delete('/hotelreservations/' + id, config)
+        .then(
+          function () {
+            refresh();
+          });
+
+      $http.delete('/ticketreservations/' + id, config)
+        .then(
+          function () {
+            refresh();
+          });
+    } else {
+      txt = "You pressed Cancel!";
+    }
+
+  }
+
+  $scope.userRefresh = function () {
+    $http.get('/users', config)
+      .then(
+        function (response) {
+          $scope.users = response.data;
+        });
+  };
+  $scope.userRefresh();
+
+  $scope.edit = function (id) {
+    console.log(id);
+    $http.get('/users/' + id, config)
+      .then(
+        function (response) {
+          $scope.useer = response.data;
+        });
   };
 
-  $scope.openSignupModal = function (size, parentSelector) {
-    var parentElem = parentSelector ?
-      angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
-    var modalInstance = $uibModal.open({
-      animation: $scope.animationsEnabled,
-      ariaLabelledBy: 'modal-title',
-      ariaDescribedBy: 'modal-body',
-      templateUrl: 'mySignupModalContent.html',
-      controller: 'ModalInstanceCtrl',
-      size: size,
-      appendTo: parentElem,
-      resolve: {
-
-      }
-    });
-
-    modalInstance.result.then(function (response) {
-      $scope.result = `${response} button hitted`;
-    }, function () {
-      $log.info('Modal dismissed at: ' + new Date());
-    });
+  $scope.save = function () {
+    $http.put('/users/' + $scope.useer._id, $scope.useer, config)
+      .then(
+        function () {
+          $scope.userRefresh();
+        });
   };
-}]);
+});
 
 app.controller('ModalInstanceCtrl', ['$uibModalInstance', '$scope', function ($uibModalInstance, $scope) {
   $scope.cancel = function () {
@@ -102,7 +186,7 @@ app.controller('ModalTicketCtrl', ['$uibModalInstance', '$scope', 'ticket', func
   };
 }]);
 
-app.controller('myCtrl', function ($scope, $http) {
+app.controller('myCtrl', function ($scope, $http, $window) {
   $scope.gender = ['Male', 'Female'];
   $scope.register = {
     gender: 'Male'
@@ -123,18 +207,19 @@ app.controller('myCtrl', function ($scope, $http) {
   }
 
   $scope.loginUser = function (credentials) {
-
-    $http.post('/login', credentials).then(
+    $http.post('/login', credentials, config).then(
       function (response) {
         localStorage.setItem('user', response.data.token);
-      }, function (error) {
-        alert(error);
+        var cancel = $scope.cancel();
+        $window.location.reload();
+      }, function () {
+        toastr.error('Credentials are wrong.!');
       });
   };
 
   $scope.registerUser = function () {
     var registerData = $scope.register;
-
+    toastr.success('You are registered now');
     $http.post('/register', registerData).then(
       function (response) {
         console.log(response);
@@ -149,7 +234,9 @@ app.controller('bookTicketCtrl', function ($scope, $http) {
   $scope.qty = ["1 ticket", "2 tickets", "3 tickets", "4 tickets", "5 tickets"];
   $scope.book = {
     ticketTitle: $scope.ticket.title,
-    ticketDestination: $scope.ticket.destination
+    ticketDestination: $scope.ticket.destination,
+    checkIn: new Date(),
+    minDate: new Date()
   };
 
   $scope.book.ticket = "1 ticket";
@@ -173,9 +260,8 @@ app.controller('bookTicketCtrl', function ($scope, $http) {
   $scope.bookTicket = function () {
     var r = confirm("Are you sure?");
     if (r == true) {
+      toastr.success('Your reservation is successful!');
       var bookData = $scope.book;
-      console.log(bookData);
-
       $http.post('/bookTicket', bookData, config).then(
         function (response) {
           console.log(response);
@@ -183,7 +269,7 @@ app.controller('bookTicketCtrl', function ($scope, $http) {
           alert(error.data.msg);
         });
 
-        $scope.cancel();
+      $scope.cancel();
     } else {
       txt = "You pressed Cancel!";
     }
@@ -214,24 +300,29 @@ app.controller('bookCtrl', function ($scope, $http, $uibModal) {
     children: "No children",
     room: "1 room",
     destination: $scope.hotel.destination,
-    hotelName: $scope.hotel.name
+    hotelName: $scope.hotel.name,
+    img: $scope.hotel.img,
+    checkIn: new Date(),
+    minDate: new Date(),
+    checkOut: new Date()
   };
 
+  $scope.disableEditor = false;
   $scope.book.room = "1 room";
-  $scope.book.price = '$' + $scope.hotel.price;
+  $scope.book.price = 'Price: $' + $scope.hotel.price;
 
   $scope.selectedItemChanged = function () {
     $scope.book.price = $scope.hotel.price;
     if ($scope.book.room == "1 room") {
-      return $scope.book.price = '$' + $scope.hotel.price;
+      return $scope.book.price = 'Price: $' + $scope.hotel.price;
     } else if ($scope.book.room == "2 rooms") {
-      return $scope.book.price = '$' + ($scope.book.price * 2);
+      return $scope.book.price = 'Price: $' + ($scope.book.price * 2);
     } else if ($scope.book.room == "3 rooms") {
-      return $scope.book.price = '$' + ($scope.book.price * 3);
+      return $scope.book.price = 'Price: $' + ($scope.book.price * 3);
     } else if ($scope.book.room == "4 rooms") {
-      return $scope.book.price = '$' + ($scope.book.price * 4);
+      return $scope.book.price = 'Price: $' + ($scope.book.price * 4);
     } else {
-      return $scope.book.price = '$' + ($scope.book.price * 5);
+      return $scope.book.price = 'Price: $' + ($scope.book.price * 5);
     }
   }
 
@@ -257,9 +348,8 @@ app.controller('bookCtrl', function ($scope, $http, $uibModal) {
   $scope.bookHotel = function () {
     var r = confirm("Are you sure?");
     if (r == true) {
+      toastr.success('Your reservation is successful!');
       var bookData = $scope.book;
-      console.log(bookData);
-
       $http.post('/book', bookData, config).then(
         function (response) {
           console.log(response);
@@ -300,30 +390,3 @@ app.controller('bookCtrl', function ($scope, $http, $uibModal) {
     $scope._Index = index;
   };
 });
-
-app.controller('loginCtrl', function ($uibModal, $scope, $log) {
-
-  $scope.openProfile = function (size, parentSelector) {
-    var parentElem = parentSelector ?
-      angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
-    var modalInstance = $uibModal.open({
-      animation: $scope.animationsEnabled,
-      ariaLabelledBy: 'modal-title',
-      ariaDescribedBy: 'modal-body',
-      templateUrl: 'myProfileModalContent.html',
-      controller: 'ModalInstanceCtrl',
-      size: size,
-      appendTo: parentElem,
-      resolve: {
-
-      }
-    });
-
-    modalInstance.result.then(function (response) {
-      $scope.result = `${response} button hitted`;
-    }, function () {
-      $log.info('Modal dismissed at: ' + new Date());
-    });
-  };
-});
-

@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h2 class="section-heading text-uppercase">Hotels</h2>
-                    <h3 class="section-subheading text-muted">Here you can find our best hotels</h3>
+                    <h3 class="section-subheading text-muted">Here you can find our hotels</h3>
                 </div>
             </div>
             <select ng-model="page_size" ng-change="get_hotels(0, page_size)">
@@ -78,7 +78,7 @@
                                                 <i class="fas fa-plus fa-3x"></i>
                                             </div>
                                         </div>
-                                        <img class="hoteli" src="{{hotel.img}}">
+                                        <img class="hoteli" src="{{hotel.img}}" ng-model="book.img">
                                     </a>
                                 </div>
                             </div><br>
@@ -100,11 +100,11 @@
                             </div>
                             <div class="form-label-group">
                                 <label>Check in:</label>
-                                <input ng-model="book.checkIn" type="date" min="01/15/2019" name="checkIn" class="form-control">
+                                <input ng-model="book.checkIn" type="date" min="{{book.minDate | date: 'yyyy-MM-dd'}}" class="form-control">
                             </div>
                             <div class="form-label-group">
                                 <label>Check out:</label>
-                                <input ng-model="book.checkOut" type="date" name="checkOut" class="form-control">
+                                <input ng-model="book.checkOut" type="date" min="{{book.minDate | date: 'yyyy-MM-dd'}}" class="form-control">
                             </div><br>
                             <div class="form-label-group">
                                 <select ng-model="book.adults" name="adults" class="sel form-control" ng-options="x for x in adults"></select>
@@ -117,7 +117,7 @@
                                 <select ng-model="book.room" ng-change="selectedItemChanged()" class="sel form-control" ng-options="x for x in rooms"></select>
                             </div>
                             <div class="form-label-group">
-                                <input ng-model="book.price" type="text" class="form-control" readonly>
+                                <input ng-model="book.price" style="color: black" type="text" class="form-control" readonly>
                             </div>
                         </div>
                     </div>

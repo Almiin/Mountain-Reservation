@@ -9,21 +9,6 @@
     <meta name="author" content="">
 
     <title>MRSystem</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom fonts for this template -->
-    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="../css/login.css" rel="stylesheet">
-    <link href="../css/agency.min.css" rel="stylesheet">
-    <link href="../css/lift.css" rel="stylesheet">
 </head>
 
 <body id="page-top" ng-controller="loginCtrl" ng-show="show">
@@ -31,27 +16,15 @@
     <div ng-controller="navController">
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" id="mainNav" role="navigation">
             <div class="btn-group float-right mt-2" role="group">
-                <button id="logo" type="button" class="btn btn-secondary btn-md" onclick="localStorage.clear(); window.location='../index.html'">Logout</button>
-                <button type="button" class="btn btn-secondary btn-md" ng-click="openProfile()">Profile</button>
+                <button id="logo" type="button" style="background-color: #fed136" class="btn" onclick="localStorage.clear(); window.location='../index.html'">Log out</button>
+                <button type="button" style="margin-right: 10px; background-color: #fed136" class="btn" ng-click="openProfile();">Profile</button>
+                <button type="button" style="width:auto; background-color: #fed136" class="btn" ng-click="openReservations()">Reservations</button>
             </div>
-                <div class="modal-demo">
-                    <script type="text/ng-template" id="myProfileModalContent.html">
-                        <form class="modal-content animate">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="modal-title">Profile</h5>
-                              <span ng-click="cancel()" class="close">&times;</span>
-                            </div>
-                        
-                            <div class="modal-body" id="modal-body">
-                            </div>
-                        </form>
-                    </script>
-                </div>
             <button type="button" class="navbar-toggler" ng-init="isCollapsed = false" ng-click="open()">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse" ng-class="{collapse: !isCollapsed}">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav navbar-right ml-auto">
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" ng-click="open()" href="#!home"><i class="fa fa-fw fa-home"></i>
                             Home</a>
@@ -77,15 +50,113 @@
         </nav>
     </div>
 
+    <script type="text/ng-template" id="myProfileModalContent.html">
+        <div ng-controller="profileCtrl">
+            <form class="modal-content animate">
+                <div ng-repeat="user in users">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-title">Profile</h5>
+                        <span ng-click="cancel()" class="close">&times;</span>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+                        <div>
+                            <table class= "table">
+                                <tr>
+                                    <td>First Name:</td>
+                                    <td ng-hide="disableEditor"><b>{{user.name}}</b></td>
+                                    <td ng-hide="!disableEditor"><input class="form-control" ng-model="useer.name"></td>
+                                </tr>
+                                <tr>
+                                    <td>Last Name:</td>
+                                    <td ng-hide="disableEditor"><b>{{user.surname}}</b></td>
+                                    <td ng-hide="!disableEditor"><input class="form-control" ng-model="useer.surname"></td>
+                                </tr>
+                                <tr>
+                                    <td>E-mail:</td>
+                                    <td ng-hide="disableEditor"><b>{{user.email}}</b></td>
+                                    <td ng-hide="!disableEditor"><input class="form-control" ng-model="useer.email" readonly></td>
+                                </tr>
+                                <tr>
+                                    <td>Address:</td>
+                                    <td ng-hide="disableEditor"><b>{{user.address}}</b></td>
+                                    <td ng-hide="!disableEditor"><input class="form-control" ng-model="useer.address"></td>
+                                </tr>
+                                <tr>
+                                    <td>Gender:</td>
+                                    <td ng-hide="disableEditor"><b>{{user.gender}}</b></td>
+                                    <td ng-hide="!disableEditor"><input class="form-control" ng-model="useer.gender"></td>
+                                </tr>
+                                <tr>
+                                    <td>Phone:</td>
+                                    <td ng-hide="disableEditor"><b>{{user.phone}}</b></td>
+                                    <td ng-hide="!disableEditor"><input class="form-control" ng-model="useer.phone"></td>
+                                </tr>
+                                <tr>
+                                    <td>Age:</td>
+                                    <td ng-hide="disableEditor"><b>{{user.age}}</b></td>
+                                    <td ng-hide="!disableEditor"><input class="form-control" ng-model="useer.age"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button ng-hide="disableEditor" ng-click="disableEditor = true; edit(user._id)" class="btn btn-primary">Edit</button>          
+                        <button ng-click="userRefresh(); disableEditor = false" ng-hide="!disableEditor" class="btn btn-danger">Cancel</button>
+                        <button ng-click="save()" ng-hide="!disableEditor" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </script>
+    <script type="text/ng-template" id="myReservationsModalContent.html" style="width:700px">
+        <div class="modal-content" style="width: 790px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -0%)">
+        <div ng-controller="profileCtrl">
+            <form class="modal-content animate">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Reservations</h5>
+                    <span ng-click="cancel()" class="close">&times;</span>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <table class="table">
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Reservation</th>
+                            <th>Destination</th>
+                            <th>Check In / Check Out</th>
+                            <th>Amount</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr ng-repeat="x in hotelreservations">
+                            <td><img style="width:80px;height:80px" src="{{x.img}}"></td>
+                            <td>{{x.hotel}}</td>
+                            <td>{{x.destination}}</td>
+                            <td>{{x.checkIn + ' / ' + x.checkOut}}</td>
+                            <td>{{x.rooms}}</td>
+                            <td>{{x.price}}</td>
+                            <td><button ng-click="delete(x._id)" class="btn btn-danger">Delete</button></td>
+                        </tr>
+                        <tr ng-repeat="a in ticketreservations">
+                                <td><img style="width:80px;height:80px" src="../img/no-image.svg"></td>
+                                <td>{{a.ticket}}</td>
+                                <td>{{a.destination}}</td>
+                                <td>{{a.checkIn}}</td>
+                                <td>{{a.amount}}
+                                <td>{{a.price}}</td>
+                                <td><button ng-click="delete(a._id)" class="btn btn-danger">Delete</button></td>
+                            </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                                
+                </div>
+            </form>
+        </div>
+    </div>
+    </script>
+
     <div ng-view></div>
 
 </body>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-touch.js"></script>
-<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
-<script src="../js/myApp.js"></script>
-<script src="../js/hotelModals.js"></script>
 </html>

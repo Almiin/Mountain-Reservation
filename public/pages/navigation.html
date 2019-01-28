@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div ng-controller="navController">
+        <nav class="navbar navbar-expand-lg fixed-top navbar-dark" id="mainNav" role="navigation">
+            <div class="btn-group float-right mt-2" role="group">
+                <button type="button" id="log" style="background-color: #fed136" class="btn" ng-click="openLoginModal()">Log in</button>
+                <button type="button" style="background-color: #fed136" class="btn" ng-click="openSignupModal()">Register</button>
+            </div>
+            <button type="button" class="navbar-toggler" ng-init="isCollapsed = false" ng-click="open()">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse" ng-class="{collapse: !isCollapsed}">
+                <ul class="nav navbar-nav navbar-right ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" ng-click="open()" href="#!home"><i class="fa fa-fw fa-home"></i>
+                            Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" ng-click="open(); hotels()" href="#!hotels"><i class="fas fa-bed"></i>
+                            Hotels</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" ng-click="open()" href="#!lift"><i class="fas fa-ticket-alt"></i>
+                            Ski Lift Tickets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" ng-click="open()" href="#!about"><i class="fas fa-book-reader"></i>
+                            About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" ng-click="open()" href="#!contact"><i class="fa fa-fw fa-envelope"></i>
+                            Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <div class="modal-demo" id="darkModalForm">
+        <div class="modal-dialog form-dark" role="document">
+            <script type="text/ng-template" id="mySignupModalContent.html">
+                <div class="modal-content" style="width: 550px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -0%)">
+            <div ng-controller="myCtrl">
+                <form name="registerForm" style="background-size: cover; opacity: 1.0;background-image: url('https://mdbootstrap.com/img/Photos/Others/pricing-table%20(7).jpg');">
+                <div class="modal-header text-center pb-4" style="background-color: rgba(62,69,81,.7)">
+                    <h5 class="modal-title w-100 white-text" style="color: white" id="myModalLabel">Register</h5>
+                    <span ng-click="cancel()" class="close">&times;</span>
+                </div>
+                
+            <div class="modal-body" id="modal-body" style="background-color: rgba(62,69,81,.7)">
+                <div class="form-group">
+                <div class="form-label-group">
+                    <input ng-model="register.name" type="text" name="name" placeholder="Name" autofocus="autofocus" required="">
+                    <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="registerForm.name.$invalid && !registerForm.name.$pristine" class="help-block">Your name is required.</p>
+                </div>
+                </div>
+                <div class="form-group">
+                <div class="form-label-group">
+                    <input ng-model="register.surname" type="text" name="surname" placeholder="Surname" required="">
+                    <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="registerForm.surname.$invalid && !registerForm.surname.$pristine" class="help-block">Your surname is required.</p>
+                </div>
+                </div>
+                <div class="form-group">
+                <div class="form-label-group">
+                    <input ng-model="register.email" type="email" name="email" placeholder="E-mail" required="">
+                    <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="registerForm.email.$invalid && !registerForm.email.$pristine" class="help-block">Enter a valid email.</p>
+                </div>
+                </div>
+                <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-6">
+                    <div class="form-label-group">
+                        <select ng-model="register.gender" id="gend" name="gen" checked="checked" class="form-control" ng-options="x for x in gender" required=""></select> 
+                        <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="registerForm.gender.$invalid && !registerForm.gender.$pristine" class="help-block">Your gender is required.</p>
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                    <div class="form-label-group">
+                        <input ng-model="register.address" type="text" name="address" placeholder="Address" required="">
+                        <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="registerForm.address.$invalid && !registerForm.address.$pristine" class="help-block">Your address is required.</p>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-6">
+                    <div class="form-label-group">
+                        <input ng-model="register.phone" type="text" name="phone" placeholder="Phone" required="">
+                        <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="registerForm.phone.$invalid && !registerForm.phone.$pristine" class="help-block">Your phone is required.</p>
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                    <div class="form-label-group">
+                        <input ng-model="register.age" type="number" name="age" placeholder="Age" required="">
+                        <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="registerForm.age.$invalid && !registerForm.age.$pristine" class="help-block">Your age is required.</p>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-6">
+                    <div class="form-label-group">
+                        <input ng-model="register.password" type="password" name="password" placeholder="Password" required="">
+                        <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="registerForm.password.$invalid && !registerForm.password.$pristine" class="help-block">Your password is required.</p>
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                    <div class="form-label-group">
+                        <input ng-model="register.cpassword" type="password" name="cpassword"  placeholder="Confirm Password" required="">
+                        <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="registerForm.cpassword.$invalid && !registerForm.cpassword.$pristine" class="help-block">You have to confirm password.</p>
+                    </div>
+                    </div>
+                </div>
+                </div>
+    
+                <div class="modal-footer">
+                <button ng-click="registerUser(); cancel()" ng-disabled="registerForm.$invalid" class="btn btn-block btn-primary">Register</button>
+                </div>
+            </div>
+            </form>
+        </div>
+            </div>
+        </script>
+        </div>
+    </div>
+
+    <div class="modal-demo">
+        <script type="text/ng-template" id="myLoginModalContent.html">
+        <div ng-controller="myCtrl">
+
+            <form name="loginForm" class="modal-content animate" style="background-size: cover;background-image: url('https://mdbootstrap.com/img/Photos/Others/pricing-table%20(7).jpg');">
+                <div class="modal-header text-center pb-4" style="background-color: rgba(62,69,81,.7)">
+                        <h5 class="modal-title w-100 white-text" style="color: white" id="myModalLabel">Log in</h5>
+                        <span ng-click="cancel()" class="close">&times;</span>
+                </div>
+            
+                <div class="modal-body" id="modal-body" style="background-color: rgba(62,69,81,.7)">
+                <div class="form-group">
+                    <div class="form-label-group">
+                    <input ng-model="credentials.email" type="email" name="email" placeholder="E-mail" autofocus="autofocus" required="">
+                    <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="loginForm.email.$invalid && !loginForm.email.$pristine" class="help-block">Enter a valid email.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label-group">
+                    <input ng-model="credentials.password" type="password" name="pass" placeholder="Password" required="">
+                    <p style="font-size: 12px;color:white; text-shadow: 1px 1px black" ng-show="loginForm.pass.$invalid && !loginForm.pass.$pristine" class="help-block">Your password is required.</p>
+                </div>
+                </div>
+
+                <div class="modal-footer">
+                <button type="submit" class="btn btn-block btn-primary" ng-click="loginUser(credentials);" ng-disabled="loginForm.$invalid">Log in</button>
+                </div>
+            </form>
+        </script>
+    </div>
+
+    <div ng-view></div>
+</body>
+
+</html>

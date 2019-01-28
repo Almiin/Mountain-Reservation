@@ -1,10 +1,35 @@
-input[type=text], input[type=password], input[type=email], input[type=number] {
+input[type=text], input[type=password], input[type=email], input[type=number], input[type=tel] {
     width: 100%;
     padding: 8px 20px;
     margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
+    -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    -o-transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: none;
+    border-bottom: 1px solid #ced4da;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: white;
+  }
+
+  .md-form label{
+    position: absolute;
+    top: .65rem;
+    left: 0;
+    -webkit-transition: .2s ease-out;
+    -o-transition: .2s ease-out;
+    transition: .2s ease-out;
+    cursor: text;
+    color: #757575;
   }
 
   .dest{
@@ -23,8 +48,13 @@ input[type=text], input[type=password], input[type=email], input[type=number] {
     padding: 0px 20px;
     margin: 8px 0;
     display: inline-block;
-    border: 1px solid #ccc;
+    background-color: transparent;
+    color: white;
   }
+
+  ::-webkit-input-placeholder {
+    color:white;
+}
   
   button {
     background-color: #4CAF50;
