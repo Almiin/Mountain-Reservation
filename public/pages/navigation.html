@@ -12,7 +12,8 @@
     <div ng-controller="navController">
         <nav class="navbar navbar-expand-lg fixed-top navbar-dark" id="mainNav" role="navigation">
             <div class="btn-group float-right mt-2" role="group">
-                <button type="button" id="log" style="background-color: #fed136" class="btn" ng-click="openLoginModal()">Log in</button>
+                <button type="button" id="log" style="background-color: #fed136" class="btn" ng-click="openLoginModal()">Log
+                    in</button>
                 <button type="button" style="background-color: #fed136" class="btn" ng-click="openSignupModal()">Register</button>
             </div>
             <button type="button" class="navbar-toggler" ng-init="isCollapsed = false" ng-click="open()">
@@ -48,9 +49,8 @@
     <div class="modal-demo" id="darkModalForm">
         <div class="modal-dialog form-dark" role="document">
             <script type="text/ng-template" id="mySignupModalContent.html">
-                <div class="modal-content" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -0%)">
             <div ng-controller="myCtrl">
-                <form name="registerForm" style="background-size: cover; opacity: 1.0;background-image: url('https://mdbootstrap.com/img/Photos/Others/pricing-table%20(7).jpg');">
+                <form name="registerForm" class="modal-content animate" style="position: absolute;background-size: cover; opacity: 1.0;background-image: url('https://mdbootstrap.com/img/Photos/Others/pricing-table%20(7).jpg');">
                 <div class="modal-header text-center pb-4" style="background-color: rgba(62,69,81,.7)">
                     <h5 class="modal-title w-100 white-text" style="color: white" id="myModalLabel">Register</h5>
                     <span ng-click="cancel()" class="close">&times;</span>
@@ -130,7 +130,6 @@
             </div>
             </form>
         </div>
-            </div>
         </script>
         </div>
     </div>
